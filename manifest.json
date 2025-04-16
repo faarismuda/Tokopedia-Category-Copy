@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Tokopedia Category Copier",
+    "version": "1.0",
+    "description": "Copy Tokopedia categories with a single click",
+    "permissions": ["clipboardWrite", "activeTab"],
+    "content_scripts": [
+      {
+        "matches": ["*://*.tokopedia.com/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
