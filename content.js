@@ -97,12 +97,19 @@ function extractTokopediaCategories() {
 // Function to add a "Copy Category" button
 function addCopyTokopediaCategoryButton() {
   // Check if the button already exists to avoid duplicates
-  if (document.getElementById("copy-category-btn")) {
+  if (document.getElementById("tokopedia-copy-category-btn")) {
     return;
   }
 
-  // Get the category container
-  const categoryContainer = document.querySelector(".css-1dpvxxc");
+  // Find the "Kategori" header to ensure the section exists.
+  // This is more reliable than just checking for a container class.
+  const categoryHeader = Array.from(
+    document.querySelectorAll('h6[data-unify="Typography"]')
+  ).find((el) => el.textContent.trim() === "Kategori");
+
+  // If the header is not found, or its parent container is not found, do not add the button.
+  const categoryContainer = categoryHeader?.closest(".css-1dpvxxc");
+
   if (!categoryContainer) {
     console.error("Category container not found");
     return;
@@ -110,7 +117,7 @@ function addCopyTokopediaCategoryButton() {
 
   // Create the button
   const button = document.createElement("button");
-  button.id = "copy-category-btn";
+  button.id = "tokopedia-copy-category-btn";
   button.textContent = "Copy Categories";
   button.style.display = "block";
   button.style.margin = "0 auto 10px auto"; // Top margin 0, center horizontally, bottom margin 10px
@@ -186,7 +193,7 @@ const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     if (mutation.type === "childList") {
       // If category container appears/changes, try to add the button
-      if (!document.getElementById("copy-category-btn")) {
+      if (!document.getElementById("tokopedia-copy-category-btn")) {
         addCopyTokopediaCategoryButton();
       }
     }
