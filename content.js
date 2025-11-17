@@ -107,11 +107,11 @@ function addCopyTokopediaCategoryButton() {
     document.querySelectorAll('h6[data-unify="Typography"]')
   ).find((el) => el.textContent.trim() === "Kategori");
 
-  // If the header is not found, or its parent container is not found, do not add the button.
-  const categoryContainer = categoryHeader?.closest(".css-1dpvxxc");
+  // Find the header's parent button, which acts as the insertion point.
+  const headerButton = categoryHeader?.closest("button");
 
-  if (!categoryContainer) {
-    console.error("Category container not found");
+  if (!headerButton) {
+    console.error("Category header button not found, cannot add copy button.");
     return;
   }
 
@@ -120,7 +120,7 @@ function addCopyTokopediaCategoryButton() {
   button.id = "tokopedia-copy-category-btn";
   button.textContent = "Copy Categories";
   button.style.display = "block";
-  button.style.margin = "0 auto 10px auto"; // Top margin 0, center horizontally, bottom margin 10px
+  button.style.margin = "10px auto"; // Top margin 0, center horizontally, bottom margin 10px
   button.style.padding = "8px 16px";
   button.style.backgroundColor = "#42b549"; // Tokopedia green
   button.style.color = "white";
@@ -169,11 +169,8 @@ function addCopyTokopediaCategoryButton() {
     }
   });
 
-  // Insert the button after the category container
-  categoryContainer.parentNode.insertBefore(
-    button,
-    categoryContainer.nextSibling
-  );
+  // Insert the button right after the "Kategori" header button.
+  headerButton.parentNode.insertBefore(button, headerButton.nextSibling);
 }
 
 // Run the function to add the button
