@@ -87,8 +87,17 @@ function addCopyCategoryButton() {
     return;
   }
   
+  // Find all h6 headings and check if one of them is "Kategori"
+  const headings = document.querySelectorAll('h6[data-unify="Typography"]');
+  const categoryHeading = Array.from(headings).find(h => h.textContent.trim() === 'Kategori');
+
+  // If the "Kategori" heading is not found, do not add the button.
+  if (!categoryHeading) {
+    return;
+  }
+
   // Get the category container
-  const categoryContainer = document.querySelector('.css-1cb34wj');
+  const categoryContainer = document.querySelector('.css-1dpvxxc');
   if (!categoryContainer) {
     console.error('Category container not found');
     return;
@@ -99,7 +108,7 @@ function addCopyCategoryButton() {
   button.id = 'copy-category-btn';
   button.textContent = 'Copy Categories';
   button.style.display = 'block';
-  button.style.margin = '10px auto'; // Center the button horizontally
+  button.style.margin = '0 auto 10px auto'; // Top margin 0, center horizontally, bottom margin 10px
   button.style.padding = '8px 16px';
   button.style.backgroundColor = '#42b549'; // Tokopedia green
   button.style.color = 'white';
