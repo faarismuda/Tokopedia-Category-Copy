@@ -1,174 +1,182 @@
 // Function to expand all category dropdown buttons
-async function expandAllCategories() {
+async function expandAllTokopediaCategories() {
   // Find all collapsed dropdown buttons (only those with class css-5zeid9)
-  const buttons = document.querySelectorAll('button.css-5zeid9[data-testid="btnSRPDropDownCategoryFilter"]');
+  const buttons = document.querySelectorAll(
+    'button.css-1ve8okv[data-testid="btnSRPDropDownCategoryFilter"]'
+  );
   let clickedAny = false;
-  
+
   // Click each button to expand categories
   for (const button of buttons) {
     button.click();
     clickedAny = true;
     // Small delay to allow DOM to update
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise((resolve) => setTimeout(resolve, 50));
   }
-  
+
   // If we clicked any buttons, wait a bit longer for all expansions to complete
   if (clickedAny) {
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     // Recursively expand any new buttons that appeared
-    await expandAllCategories();
+    await expandAllTokopediaCategories();
   }
 }
 
 // Function to extract all category paths from Tokopedia's category navigation
 function extractTokopediaCategories() {
   // Get the main container for categories
-  const categoryContainer = document.querySelector('.css-1cb34wj');
+  const categoryContainer = document.querySelector(".css-1cb34wj");
   if (!categoryContainer) {
-    return 'Category container not found on this page';
+    return "Category container not found on this page";
   }
-  
+
   const categoryPaths = [];
-  
+
   // Process each level 1 category
-  const level1Categories = categoryContainer.querySelectorAll(':scope > .css-1ksxbs2');
-  
-  level1Categories.forEach(level1Container => {
+  const level1Categories = categoryContainer.querySelectorAll(
+    ":scope > .css-1ksxbs2"
+  );
+
+  level1Categories.forEach((level1Container) => {
     // Get level 1 category name
-    const level1Name = level1Container.querySelector('[data-testid="spnSRPLevel1Filter"]')?.textContent.trim();
+    const level1Name = level1Container
+      .querySelector('[data-testid="spnSRPLevel1Filter"]')
+      ?.textContent.trim();
     if (!level1Name) return;
-    
+
     // Find level 2 container
-    const level2Container = level1Container.querySelector('.css-14repag');
+    const level2Container = level1Container.querySelector(".css-14repag");
     if (!level2Container) {
       // If no subcategories, add the level 1 category alone
       categoryPaths.push(level1Name);
       return;
     }
-    
+
     // Process each level 2 category
-    const level2Categories = level2Container.querySelectorAll(':scope > .css-1ksxbs2');
-    
-    level2Categories.forEach(level2Container => {
+    const level2Categories = level2Container.querySelectorAll(
+      ":scope > .css-1ksxbs2"
+    );
+
+    level2Categories.forEach((level2Container) => {
       // Get level 2 category name
-      const level2Name = level2Container.querySelector('[data-testid="spnSRPLevel2Filter"]')?.textContent.trim();
+      const level2Name = level2Container
+        .querySelector('[data-testid="spnSRPLevel2Filter"]')
+        ?.textContent.trim();
       if (!level2Name) return;
-      
+
       // Find level 3 container
-      const level3Container = level2Container.querySelector('.css-14repag');
+      const level3Container = level2Container.querySelector(".css-14repag");
       if (!level3Container) {
         // If no level 3 categories, add the level 1 > level 2 path
         categoryPaths.push(`${level1Name} > ${level2Name}`);
         return;
       }
-      
+
       // Process each level 3 category
-      const level3Categories = level3Container.querySelectorAll(':scope > .css-1ksxbs2');
-      
-      level3Categories.forEach(level3Container => {
+      const level3Categories = level3Container.querySelectorAll(
+        ":scope > .css-1ksxbs2"
+      );
+
+      level3Categories.forEach((level3Container) => {
         // Get level 3 category name
-        const level3Name = level3Container.querySelector('[data-testid="spnSRPLevel3Filter"]')?.textContent.trim();
+        const level3Name = level3Container
+          .querySelector('[data-testid="spnSRPLevel3Filter"]')
+          ?.textContent.trim();
         if (!level3Name) return;
-        
+
         // Add the complete path: level 1 > level 2 > level 3
         categoryPaths.push(`${level1Name} > ${level2Name} > ${level3Name}`);
       });
     });
   });
-  
+
   // Join all paths with semicolons as requested
-  return categoryPaths.join('; ');
+  return categoryPaths.join("; ");
 }
 
 // Function to add a "Copy Category" button
-function addCopyCategoryButton() {
+function addCopyTokopediaCategoryButton() {
   // Check if the button already exists to avoid duplicates
-  if (document.getElementById('copy-category-btn')) {
-    return;
-  }
-  
-  // Find all h6 headings and check if one of them is "Kategori"
-  const headings = document.querySelectorAll('h6[data-unify="Typography"]');
-  const categoryHeading = Array.from(headings).find(h => h.textContent.trim() === 'Kategori');
-
-  // If the "Kategori" heading is not found, do not add the button.
-  if (!categoryHeading) {
+  if (document.getElementById("copy-category-btn")) {
     return;
   }
 
   // Get the category container
-  const categoryContainer = document.querySelector('.css-1dpvxxc');
+  const categoryContainer = document.querySelector(".css-1dpvxxc");
   if (!categoryContainer) {
-    console.error('Category container not found');
+    console.error("Category container not found");
     return;
   }
-  
+
   // Create the button
-  const button = document.createElement('button');
-  button.id = 'copy-category-btn';
-  button.textContent = 'Copy Categories';
-  button.style.display = 'block';
-  button.style.margin = '0 auto 10px auto'; // Top margin 0, center horizontally, bottom margin 10px
-  button.style.padding = '8px 16px';
-  button.style.backgroundColor = '#42b549'; // Tokopedia green
-  button.style.color = 'white';
-  button.style.border = 'none';
-  button.style.borderRadius = '4px';
-  button.style.cursor = 'pointer';
-  button.style.fontWeight = 'bold';
-  button.style.width = '85%';
-  
+  const button = document.createElement("button");
+  button.id = "copy-category-btn";
+  button.textContent = "Copy Categories";
+  button.style.display = "block";
+  button.style.margin = "0 auto 10px auto"; // Top margin 0, center horizontally, bottom margin 10px
+  button.style.padding = "8px 16px";
+  button.style.backgroundColor = "#42b549"; // Tokopedia green
+  button.style.color = "white";
+  button.style.border = "none";
+  button.style.borderRadius = "4px";
+  button.style.cursor = "pointer";
+  button.style.fontWeight = "bold";
+  button.style.width = "85%";
+
   // Add click event
-  button.addEventListener('click', async () => {
+  button.addEventListener("click", async () => {
     // Change button text to show processing
-    button.textContent = 'Expanding...';
+    button.textContent = "Expanding...";
     button.disabled = true;
-    
+
     try {
       // First expand all categories
-      await expandAllCategories();
-      
+      await expandAllTokopediaCategories();
+
       // Then extract the categories
-      button.textContent = 'Copying...';
+      button.textContent = "Copying...";
       const categoryText = extractTokopediaCategories();
-      
+
       // Copy to clipboard
       await navigator.clipboard.writeText(categoryText);
-      
+
       // Show success message
-      button.textContent = 'Copied!';
-      button.style.backgroundColor = '#35a53c';
-      
+      button.textContent = "Copied!";
+      button.style.backgroundColor = "#35a53c";
+
       setTimeout(() => {
-        button.textContent = 'Copy Categories';
-        button.style.backgroundColor = '#42b549';
+        button.textContent = "Copy Categories";
+        button.style.backgroundColor = "#42b549";
         button.disabled = false;
       }, 2000);
     } catch (err) {
-      console.error('Failed to process: ', err);
-      button.textContent = 'Error!';
-      button.style.backgroundColor = '#e74c3c';
-      
+      console.error("Failed to process: ", err);
+      button.textContent = "Error!";
+      button.style.backgroundColor = "#e74c3c";
+
       setTimeout(() => {
-        button.textContent = 'Copy Categories';
-        button.style.backgroundColor = '#42b549';
+        button.textContent = "Copy Categories";
+        button.style.backgroundColor = "#42b549";
         button.disabled = false;
       }, 2000);
     }
   });
-  
+
   // Insert the button after the category container
-  categoryContainer.parentNode.insertBefore(button, categoryContainer.nextSibling);
+  categoryContainer.parentNode.insertBefore(
+    button,
+    categoryContainer.nextSibling
+  );
 }
 
 // Run the function to add the button
-addCopyCategoryButton();
+addCopyTokopediaCategoryButton();
 
 // For browser extension implementation
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Check if we're on a Tokopedia page
-  if (window.location.hostname.includes('tokopedia.com')) {
-    addCopyCategoryButton();
+  if (window.location.hostname.includes("tokopedia.com")) {
+    addCopyTokopediaCategoryButton();
   }
 });
 
@@ -176,10 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // (such as page navigation without full reload in SPA)
 const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
-    if (mutation.type === 'childList') {
+    if (mutation.type === "childList") {
       // If category container appears/changes, try to add the button
-      if (!document.getElementById('copy-category-btn')) {
-        addCopyCategoryButton();
+      if (!document.getElementById("copy-category-btn")) {
+        addCopyTokopediaCategoryButton();
       }
     }
   }
